@@ -1,0 +1,63 @@
+types:
+    idls:
+        - >
+            struct HelloWorld {
+                string data;
+            };
+
+            struct TurtlePosition {
+                float x;
+                float y;
+                float theta;
+                float linear_velocity;
+                float angular_velocity;
+            };
+            
+            struct ThermalInfo {
+                float temperatureMax;
+                float temperatureMin;
+                sequence<double> positionMax;
+                sequence<double> positionMin;
+            };
+            
+            struct Battery {
+                float level;
+                long time_remaining;
+                boolean is_charging;
+            };
+            
+            struct Point {
+                float x;
+                float y;
+                float z;
+            };
+            
+            struct Quaternion {
+            	float x;
+            	float y;
+            	float z;
+            	float w;
+            };
+            
+            struct Odometry {
+                Point position;
+                Quaternion pose;
+            };
+            
+            struct Telemetry {
+                Odometry odom;
+                Battery battery;
+            };
+            
+            
+systems:
+    ros1: { type: ros1 }
+    fiware: { type: fiware, host: "161.72.18.76", port: 1026, types-from: ros1 }
+
+routes:
+    ros1_to_fiware: { from: ros1, to: fiware }
+
+topics:
+    GARA.IRCamera.thermal.info: { type: "gara_messages/IRCameraTemperatureInfo", route: ros1_to_fiware, remap: {fiware: {type: ThermalInfo}, ros1: { topic: "thermal/temperature_info" } } }
+    GARA.telemetry: { type: "gara_messages/Telemetry", route: ros1_to_fiware, remap: {fiware: {type: Telemetry}, ros1: { topic: "robot/GARA/telemetry" } } }
+    #GARA.test: { type: "gara_messages/Odom", route: ros1_to_fiware, remap: {fiware: {type: Odom}, ros1: { topic: "robot/GARA/test" } } }

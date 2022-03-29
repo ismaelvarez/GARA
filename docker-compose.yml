@@ -1,0 +1,50 @@
+version: "3.5"
+services:
+
+  ir:
+    image: ismaelvarez/instalacionconectada:ir
+    hostname: ir
+    container_name: ir
+    privileged: true
+    volumes:
+      - ./ir/config/21064185.xml:/root/catkin_ws/src/optris_drivers/config/generic.xml
+      # - ./ros/config/optris_drivers.launch:/root/catkin_ws/src/optris_drivers/launch/optris_drivers.launch
+      - ./ir/config/optris_imager.yaml:/tmp/.ros/camera_info/optris_imager.yaml
+      - /dev/bus/:/dev/bus/:ro
+      - /dev/serial:/dev/serial:ro
+    
+    devices:
+      - /dev:/dev
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311/
+      - ROS_HOSTNAME=${HOSTNAME}
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch gara_infrared_camera gara_infrared_camera.launch temperatureMin:=20 temperatureMax:=50"]
+    
+  is:
+    image: ismaelvarez/instalacionconectada:is
+    hostname: is
+    container_name: is
+    volumes:
+      - ./is/config/config.yaml:/root/is-workspace/config/config.yaml
+    
+    network_mode: host
+    depends_on:
+      - ir
+      - telemetry
+    environment:
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311/
+      - ROS_HOSTNAME=${HOSTNAME}
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && source /root/is-workspace/install/setup.bash && /root/is-workspace/install/is-core/install/integration-service /root/is-workspace/config/config.yaml"]
+    
+  telemetry:
+    image: ismaelvarez/instalacionconectada:gara-telemetry
+    hostname: telemetry
+    container_name: telemetry
+    
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311/
+      - ROS_HOSTNAME=${HOSTNAME}
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && rosrun gara_telemetry telemetry.py"]
+        
