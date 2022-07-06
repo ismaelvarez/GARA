@@ -52,7 +52,7 @@ types:
             
 systems:
     ros1: { type: ros1 }
-    fiware: { type: fiware, host: "161.72.18.76", port: 1026, types-from: ros1 }
+    fiware: { type: fiware, host: "161.72.18.20", port: 1026, types-from: ros1, fiware_service: gtc, fiware_servicePath: /}
 
 routes:
     ros1_to_fiware: { from: ros1, to: fiware }

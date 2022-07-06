@@ -17,7 +17,7 @@ RUN mkdir -p /root/catkin_ws/src
 
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin_make"]
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git && cd gara_messages && git checkout develop
 
 RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_telemetry.git
 

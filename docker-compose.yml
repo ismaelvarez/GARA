@@ -2,14 +2,13 @@ version: "3.5"
 services:
 
   ir:
-    image: ismaelvarez/instalacionconectada:ir
+    image: ir:latest
     hostname: ir
     container_name: ir
     privileged: true
     volumes:
-      - ./ir/config/21064185.xml:/root/catkin_ws/src/optris_drivers/config/generic.xml
-      # - ./ros/config/optris_drivers.launch:/root/catkin_ws/src/optris_drivers/launch/optris_drivers.launch
-      - ./ir/config/optris_imager.yaml:/tmp/.ros/camera_info/optris_imager.yaml
+      - ./modules/ir/config/21064185.xml:/root/catkin_ws/src/optris_drivers/config/generic.xml
+      - ./modules/ir/config/optris_imager.yaml:/tmp/.ros/camera_info/optris_imager.yaml
       - /dev/bus/:/dev/bus/:ro
       - /dev/serial:/dev/serial:ro
     
@@ -19,14 +18,39 @@ services:
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
-    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch gara_infrared_camera gara_infrared_camera.launch temperatureMin:=20 temperatureMax:=50"]
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait gara_infrared_camera gara_infrared_camera.launch temperatureMin:=20 temperatureMax:=50"]
+        
+  thermal_processing:
+    image: thermal_processing:latest
+    hostname: thermal_processing
+    container_name: thermal
+    depends_on:
+      - ir
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311/
+      - ROS_HOSTNAME=${HOSTNAME}
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait thermal_processing thermal_processing.launch"]
+
+  web_server:
+    image: web_server:latest
+    hostname: web_server
+    container_name: web_server
+    
+    network_mode: host
+    depends_on:
+      - ir
+    environment:
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311/
+      - ROS_HOSTNAME=${HOSTNAME}
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash  && rosrun web_video_server web_video_server _port:=8090"]
     
   is:
-    image: ismaelvarez/instalacionconectada:is
+    image: ros-is:latest
     hostname: is
     container_name: is
     volumes:
-      - ./is/config/config.yaml:/root/is-workspace/config/config.yaml
+      - ./modules/is/config/config.yaml:/root/is-workspace/config/config.yaml
     
     network_mode: host
     depends_on:
@@ -46,5 +70,5 @@ services:
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
-    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && rosrun gara_telemetry telemetry.py"]
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && rosrun --wait gara_telemetry telemetry.py"]
         

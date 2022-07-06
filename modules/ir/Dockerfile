@@ -24,7 +24,7 @@ RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && rosdep update"]
 
 RUN apt-get update
 
-RUN apt-get install -y ipython python-rospkg python-pip
+RUN apt-get install -y ipython python-rospkg python-pip 
 
 RUN pip install pyyaml
 
@@ -32,19 +32,15 @@ RUN mkdir -p /root/catkin_ws/src
 
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin_make"]
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/RobotWebTools/web_video_server.git
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git && cd gara_messages && git checkout develop
 
 RUN cd /root/catkin_ws/src && git clone https://github.com/ros-perception/image_pipeline.git && cd image_pipeline && git checkout melodic
 
-RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/optris_drivers"]
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/optris_drivers && cd optris_drivers && git checkout develop
+
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_infrared_camera && cd gara_infrared_camera && git checkout develop
 
 RUN cd /root/catkin_ws/src && git clone https://github.com/ros/geometry.git && cd geometry && git checkout melodic-devel
-
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git
-
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/thermal_processing.git
-
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_infrared_camera.git
 
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && rosdep install --from-paths src --ignore-src -r -y"]
 
@@ -56,4 +52,4 @@ RUN chmod 777 /tmp/.ros/camera_info/optris_imager.yaml
 
 RUN ir_download_calibration
 
-RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && rosrun gara_infrared_camera gara_infrared_camera &"]
+RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash"]
