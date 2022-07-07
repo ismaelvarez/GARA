@@ -20,9 +20,9 @@ RUN cd /root/catkin_ws/src && git clone https://github.com/ros-perception/vision
 
 RUN cd /root/catkin_ws/src && git clone https://github.com/ros/geometry.git && cd geometry && git checkout melodic-devel
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git && cd gara_messages && git checkout develop
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git 
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/thermal_processing.git && cd thermal_processing && git checkout develop
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/thermal_processing.git
 
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && rosdep install --from-paths src --ignore-src -r -y"]
 

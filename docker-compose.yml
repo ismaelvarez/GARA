@@ -2,7 +2,7 @@ version: "3.5"
 services:
 
   ir:
-    image: ir:latest
+    image: ismaelvarez/instalacionconectada:ir
     hostname: ir
     container_name: ir
     privileged: true
@@ -21,7 +21,7 @@ services:
     command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait gara_infrared_camera gara_infrared_camera.launch temperatureMin:=20 temperatureMax:=50"]
         
   thermal_processing:
-    image: thermal_processing:latest
+    image: ismaelvarez/instalacionconectada:thermal-processing
     hostname: thermal_processing
     container_name: thermal
     depends_on:
@@ -33,7 +33,7 @@ services:
     command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait thermal_processing thermal_processing.launch"]
 
   web_server:
-    image: web_server:latest
+    image: ismaelvarez/instalacionconectada:web-server
     hostname: web_server
     container_name: web_server
     

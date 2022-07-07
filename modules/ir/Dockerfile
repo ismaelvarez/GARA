@@ -32,13 +32,13 @@ RUN mkdir -p /root/catkin_ws/src
 
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin_make"]
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git && cd gara_messages && git checkout develop
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_messages.git
 
 RUN cd /root/catkin_ws/src && git clone https://github.com/ros-perception/image_pipeline.git && cd image_pipeline && git checkout melodic
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/optris_drivers && cd optris_drivers && git checkout develop
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/optris_drivers
 
-RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_infrared_camera && cd gara_infrared_camera && git checkout develop
+RUN cd /root/catkin_ws/src && git clone https://github.com/ismaelvarez/gara_infrared_camera
 
 RUN cd /root/catkin_ws/src && git clone https://github.com/ros/geometry.git && cd geometry && git checkout melodic-devel
 
