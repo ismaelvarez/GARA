@@ -52,4 +52,4 @@ RUN chmod 777 /tmp/.ros/camera_info/optris_imager.yaml
 
 RUN ir_download_calibration
 
-RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash"]
+ENTRYPOINT ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait gara_infrared_camera gara_infrared_camera.launch temperatureMin:=20 temperatureMax:=50""]

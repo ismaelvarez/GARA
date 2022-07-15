@@ -18,7 +18,18 @@ services:
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
-    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait gara_infrared_camera gara_infrared_camera.launch temperatureMin:=20 temperatureMax:=50"]
+ 
+  tf:
+    image: tf:latest
+    hostname: tf
+    container_name: tf
+    privileged: true
+    network_mode: host
+    env_file:
+      - .env
+    environment:
+      - ROS_MASTER_URI=http://${HOSTNAME}:11311/
+      - ROS_HOSTNAME=${HOSTNAME}
         
   thermal_processing:
     image: ismaelvarez/instalacionconectada:thermal-processing
@@ -30,21 +41,19 @@ services:
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
-    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait thermal_processing thermal_processing.launch"]
 
   web_server:
     image: ismaelvarez/instalacionconectada:web-server
     hostname: web_server
     container_name: web_server
-    
     network_mode: host
     depends_on:
       - ir
+    env_file:
+      - .env
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
-    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash  && rosrun web_video_server web_video_server _port:=8090"]
-    
   is:
     image: ros-is:latest
     hostname: is

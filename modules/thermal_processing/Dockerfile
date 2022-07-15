@@ -28,4 +28,4 @@ RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_w
 
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin_make"]
 
-RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash"]
+ENTRYPOINT ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && roslaunch --wait thermal_processing thermal_processing.launch"]
