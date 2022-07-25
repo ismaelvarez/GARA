@@ -38,6 +38,8 @@ services:
     depends_on:
       - ir
     network_mode: host
+    env_file:
+      - .env
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
@@ -79,5 +81,4 @@ services:
     environment:
       - ROS_MASTER_URI=http://${HOSTNAME}:11311/
       - ROS_HOSTNAME=${HOSTNAME}
-    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && source /root/catkin_ws/devel/setup.bash && rosrun --wait gara_telemetry telemetry.py"]
         
